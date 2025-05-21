@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apologize, You Stalker 😤</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #fff0f5;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #d63384;
+    }
+
+    h1 {
+      font-size: 42px;
+    }
+
+    p {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+
+    .gif {
+      width: 250px;
+      margin: 20px 0;
+      border-radius: 20px;
+      box-shadow: 0 0 10px #ffb6c1;
+    }
+
+    #status {
+      font-size: 16px;
+      color: gray;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Say it 😤</h1>
+  <p>I won't let you go back until you say:</p>
+  <p><strong>"Sorry Cutie"</strong></p>
+
+  <img class="gif" src="https://media.giphy.com/media/3o7TKPdUkkbA3XyZGM/giphy.gif" alt="angry cute gif">
+
+  <p id="status">🎙️ Waiting for your apology...Idiot</p>
+  <button id="backBtn" onclick="goBack()">Fine, you may go</button>
+
+  <audio autoplay>
+    <source src="https://www.soundjay.com/human/sounds/sigh-01.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const status = document.getElementById('status');
+    const backBtn = document.getElementById('backBtn');
+
+    function goBack() {
+      window.history.back();
+    }
+
+    // Check for speech recognition support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = true;
+      recognition.interimResults = false;
+
+      recognition.onresult = function (event) {
+        const transcript = event.results[event.results.length - 1][0].transcript.trim().toLowerCase();
+        console.log("You said:", transcript);
+        status.textContent = `🎧 Heard: "${transcript}"`;
+
+        if (transcript.includes("sorry cutie")) {
+          recognition.stop();
+          status.textContent = "✅ Apology accepted.";
+          backBtn.style.display = "inline-block";
+        }
+      };
+
+      recognition.onerror = function (event) {
+        status.textContent = "❌ Error: " + event.error;
+      };
+
+      recognition.start();
+    } else {
+      status.textContent = "Speech Recognition not supported on this browser 😢";
+    }
+  </script>
+
+</body>
+</html>
